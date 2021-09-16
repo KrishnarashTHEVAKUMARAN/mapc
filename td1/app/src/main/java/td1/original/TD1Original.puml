@@ -1,0 +1,98 @@
+@startuml TD1Original
+package TD1 {
+  package original {
+    package MainIngredient {
+        interface Product{
+        +weight(): double
+        +price(): double
+        }
+
+        class Burger{
+        name : String
+
+        +this(in name: String, in items: List<Product>)
+        +weight(): double
+        +price(): double
+        +toString(): String
+        }
+
+        class Sauce implements Product{
+        -BASE_PRICE: {static} double
+        -type: SauceType
+        -weight: double
+        +SauceType: {static} enum
+
+        +this(in type: SauceType, in weight : double)
+        +weight(): double
+        +toString(): String
+        }
+
+        class Meat implements Product{
+        -type: MeatType
+        -weight: double
+        +MeatType: enum
+
+        +this(in type: MeatType, in weight : double)
+        +weight(): double
+        +price(): double
+        +toString(): String
+        }
+
+        class Cheddar implements Product{
+        -weight: double
+        -BASE_PRICE: double
+
+        +this(in weight : double)
+        +weight(): double
+        +price(): double
+        +toString(): String
+        }
+
+        class Tomato implements Product{
+        -weight: double
+        -BASE_PRICE: double
+
+        +this(in weight : double)
+        +weight(): double
+        +price(): double
+        +toString(): String
+        }
+
+        class DeepFriedOnion implements Product{
+        -weight: double
+        -BASE_PRICE: double
+
+        +this(in weight : double)
+        +weight(): double
+        +price(): double
+        +toString(): String
+        }
+
+        enum SauceType{
+        BURGER, BARBECUE, BEARNAISE
+        }
+
+        enum MeatType{
+        BEEF, WHITEFISH
+        +price(): double
+        }
+
+
+        Product "*" <--*  Burger : -items
+
+        Sauce <--* SauceType : -type
+        Meat <--* MeatType : -type
+    }
+
+    package client {
+        class App
+    }
+  }
+
+  client ..> MainIngredient
+
+}
+
+
+
+@enduml
