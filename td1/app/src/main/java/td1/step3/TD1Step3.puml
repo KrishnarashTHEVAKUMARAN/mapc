@@ -1,34 +1,31 @@
-@startuml TD1Step2
+@startuml TD1Step3
 package TD1 {
-  package step2 {
+  package step3 {
     package api {
-        package money {
+        package monetary {
             interface Product{
                 price(): double
             }
         }
 
-        package food {
-            interface Food{
+        package dietetic {
+            interface DieteticElement{
                 calories_per_100g(): double
             }
         }
 
         package restauration {
-            interface FoodProduct extends Food, Product{
-                hasUniquePrice(): boolean
-            }
-
-            interface WeightedFoodProduct extends FoodProduct{
+            interface Food extends DieteticElement, Product{
                 weight(): double
                 calories(): double <<default>>
             }
 
-        }
+            interface Base extends DieteticElement, Product{
+                hasUniquePrice(): boolean
+            }
 
-        package burger {
-            class Burger implements WeightedFoodProduct{
-                -name : String
+            class Recipe implements Food{
+                -name: String
 
                 +this(in name: String, in items: List<Ingredient>)
                 +name(): String
@@ -36,23 +33,30 @@ package TD1 {
                 +weight(): double
                 +calories(): double
                 +price(): double
-                +hasUniquePrice(): boolean
                 +toString(): String
             }
 
-            class Ingredient implements WeightedFoodProduct{
-                -weight : double
+            class Ingredient implements Food{
+                -weight: double
 
-                +this(in type: FoodType, in weight: double)
+                +this(in base: Base, in weight: double)
                 +calories_per_100g(): double
                 +weight(): double
                 +calories(): double
                 +price(): double
-                +hasUniquePrice(): boolean
                 +toString(): String
             }
 
-            enum FoodType implements FoodProduct{
+
+
+        }
+
+        package burger {
+            class Burger extends Recipe{
+                +this(in name: String, in ingredients: List<Ingredient>)
+            }
+
+            enum BurgerBase implements Base{
                 BURGER, BARBECUE, BEARNAISE, BEEF, WHITEFISH, CHEDDAR, DEEPFRIEDONIONS, TOMATO
 
                 +calories_per_100g(): double
@@ -63,8 +67,8 @@ package TD1 {
 
         }
 
-        Ingredient "*" <--*  Burger : -items
-        FoodType "1" <--*  Ingredient : -type
+        Ingredient "-" <--*  "*" Recipe  : -ingredients
+        Base "1" <--*  Ingredient : -base
 
 
     }
