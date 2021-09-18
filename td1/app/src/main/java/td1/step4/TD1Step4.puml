@@ -1,0 +1,120 @@
+@startuml TD1Step4
+package TD1 {
+  package step4 {
+    package api {
+        package monetary {
+            interface Product{
+                price(): double
+            }
+        }
+
+        package dietetic {
+            interface DieteticElement{
+                calories_per_100g(): double
+            }
+        }
+
+        package restauration {
+            interface Food extends DieteticElement, Product{
+                weight(): double
+                calories(): double <<default>>
+            }
+
+            interface Base extends DieteticElement, Product{
+                hasUniquePrice(): boolean
+            }
+
+            interface ComposedFood extends Food{
+                add(in base: Base, in weight: double): void
+            }
+
+            class Recipe implements ComposedFood{
+                -name: String
+
+                +this(in name: String, in items: List<Ingredient>)
+                +name(): String
+                +calories_per_100g(): double
+                +weight(): double
+                +calories(): double
+                +price(): double
+                +toString(): String
+            }
+
+            class Ingredient implements Food{
+                -weight: double
+
+                +this(in base: Base, in weight: double)
+                +calories_per_100g(): double
+                +weight(): double
+                +calories(): double
+                +price(): double
+                +toString(): String
+            }
+
+        }
+
+        package burger {
+            class Burger extends Recipe{
+                +this(in name: String)
+            }
+
+            class BurgerBuilder{
+                -name: String
+
+                -this()
+                +order_menu(in name: String, in type: MenuType): {static} BurgerBuilder
+                +order_beef(in name: String, in size: MenuType): {static} BurgerBuilder
+                +order_fish(in name: String, in size: MenuType): {static} BurgerBuilder
+                +with_onions(): BurgerBuilder
+                +with_tomato(): BurgerBuilder
+                +with_cheese(): BurgerBuilder
+                +with_bearnaise_sauce(): BurgerBuilder
+                +with_burger_sauce(): BurgerBuilder
+                +with_barbecue_sauce(): BurgerBuilder
+                +cook(): ComposedFood
+            }
+
+            enum BurgerBase implements Base{
+                BURGER, BARBECUE, BEARNAISE, BEEF, WHITEFISH, CHEDDAR, DEEPFRIEDONIONS, TOMATO
+
+                +calories_per_100g(): double
+                +price(): double
+                +hasUniquePrice(): boolean
+                +toString(): String
+            }
+
+            enum MenuType{
+                MEAT_MENU, FISH_MENU, CHEESE_MENU
+            }
+
+            enum MenuSize{
+                SMALL, MEDIUM, BIG
+
+                +meatWeight(): double
+            }
+
+        }
+
+        Ingredient "-" <--*  "*" Recipe  : -ingredients
+        Base "1" <--*  Ingredient : -base
+        BurgerBuilder ..> Burger : <<create>>
+        BurgerBuilder ..> ComposedFood
+        BurgerBuilder ..> BurgerBase
+        BurgerBuilder ..> MenuSize
+        BurgerBuilder ..> MenuType
+
+    }
+
+    package client {
+        class App
+    }
+
+  }
+
+  client ..> api
+
+}
+
+
+
+@enduml
