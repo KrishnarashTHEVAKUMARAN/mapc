@@ -1,0 +1,84 @@
+@startuml TD1Step2
+package TD1 {
+  package step1 {
+    package api {
+        package money {
+            interface Product{
+                price(): double
+            }
+        }
+
+        package food {
+            interface Food{
+                calories_per_100g(): double
+            }
+        }
+
+        package restauration {
+            interface FoodProduct extends Food, Product{
+                hasUniquePrice(): boolean
+            }
+
+            interface WeightedFoodProduct extends FoodProduct{
+                weight(): double
+                calories(): double <<default>>
+            }
+
+        }
+
+        package burger {
+            class Burger implements WeightedFoodProduct{
+                -name : String
+
+                +this(in name: String, in items: List<Ingredient>)
+                +name: String
+                +calories_per_100g(): double
+                +weight(): double
+                +calories(): double
+                +price(): double
+                +hasUniquePrice(): boolean
+                +toString(): String
+            }
+
+            class Ingredient implements WeightedFoodProduct{
+                -weight : double
+
+                +this(in type: FoodType, in weight: double)
+                +calories_per_100g(): double
+                +weight(): double
+                +calories(): double
+                +price(): double
+                +hasUniquePrice(): boolean
+                +toString(): String
+            }
+
+            class FoodType implements FoodProduct{
+                BURGER, BARBECUE, BEARNAISE, BEEF, WHITEFISH, CHEDDAR, DEEPFRIEDONIONS, TOMATO
+
+                +calories_per_100g(): double
+                +price(): double
+                +hasUniquePrice(): boolean
+                +toString(): String
+            }
+
+        }
+
+        Ingredient "*" <--*  Burger : -items
+        FoodType "1" <--*  Ingredient : -type
+
+
+    }
+
+    package client {
+        class App
+    }
+
+  }
+
+  client ..> api
+
+}
+
+
+
+@enduml
