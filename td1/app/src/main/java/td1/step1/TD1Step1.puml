@@ -1,95 +1,104 @@
-@startuml TD1Original
+@startuml TD1Step1
 package TD1 {
-  package original {
-    package MainIngredient {
+  package step1 {
+    package api.general {
         interface Product{
-        +weight(): double
-        +price(): double
+            weight(): double
+            price(): double
+        }
+
+        interface Food{
+            calories_per_100g(): double
+        }
+
+        interface FoodProduct extends Food, Product{
+            calories(): double <<default>>
         }
 
         class Burger{
-        name : String
+            name : String
 
-        +this(in name: String, in items: List<Product>)
-        +weight(): double
-        +price(): double
-        +toString(): String
+            +this(in name: String, in items: List<Product>)
+            +weight(): double
+            +price(): double
+            +toString(): String
         }
 
-        class Sauce implements Product{
-        -BASE_PRICE: {static} double
-        -type: SauceType
-        -weight: double
-        +SauceType: {static} enum
+        class Sauce implements FoodProduct{
+            -BASE_PRICE: {static} double
+            -type: SauceType
+            -weight: double
+            +SauceType: {static} enum
 
-        +this(in type: SauceType, in weight : double)
-        +weight(): double
-        +toString(): String
+            +this(in type: SauceType, in weight : double)
+            +weight(): double
+            +toString(): String
         }
 
-        class Meat implements Product{
-        -type: MeatType
-        -weight: double
-        +MeatType: enum
+        class Meat implements FoodProduct{
+            -type: MeatType
+            -weight: double
+            +MeatType: enum
 
-        +this(in type: MeatType, in weight : double)
-        +weight(): double
-        +price(): double
-        +toString(): String
+            +this(in type: MeatType, in weight : double)
+            +weight(): double
+            +price(): double
+            +toString(): String
         }
 
-        class Cheddar implements Product{
-        -weight: double
-        -BASE_PRICE: double
+        class Cheddar implements FoodProduct{
+            -weight: double
+            -BASE_PRICE: double
 
-        +this(in weight : double)
-        +weight(): double
-        +price(): double
-        +toString(): String
+            +this(in weight : double)
+            +weight(): double
+            +price(): double
+            +toString(): String
         }
 
-        class Tomato implements Product{
-        -weight: double
-        -BASE_PRICE: double
+        class Tomato implements FoodProduct{
+            -weight: double
+            -BASE_PRICE: double
 
-        +this(in weight : double)
-        +weight(): double
-        +price(): double
-        +toString(): String
+            +this(in weight : double)
+            +weight(): double
+            +price(): double
+            +toString(): String
         }
 
-        class DeepFriedOnion implements Product{
-        -weight: double
-        -BASE_PRICE: double
+        class DeepFriedOnion implements FoodProduct{
+            -weight: double
+            -BASE_PRICE: double
 
-        +this(in weight : double)
-        +weight(): double
-        +price(): double
-        +toString(): String
+            +this(in weight : double)
+            +weight(): double
+            +price(): double
+            +toString(): String
         }
 
-        enum SauceType{
-        BURGER, BARBECUE, BEARNAISE
+        enum SauceType implements Food{
+            BURGER, BARBECUE, BEARNAISE
         }
 
-        enum MeatType{
-        BEEF, WHITEFISH
-        +price(): double
+        enum MeatType implements Food{
+            BEEF, WHITEFISH
+            +price(): double
         }
 
 
-        Product "*" <--*  Burger : -items
+            FoodProduct "*" <--*  Burger : -items
 
-        Sauce <--* SauceType : -type
-        Meat <--* MeatType : -type
+            Sauce <--* SauceType : -type
+            Meat <--* MeatType : -type
     }
 
     package client {
         class App
     }
+
   }
 
-  client ..> MainIngredient
+  client ..> api.general
 
 }
 
