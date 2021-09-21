@@ -27,5 +27,8 @@ __TD1 Step5__
 
 ![Screenshoot](ScreenShotTD/TD1/TD1Step5.png "PlantUML TD1 Step5")
 
+__TD1 Refactoring (Not finished)__
+
+![Screenshoot](ScreenShotTD/TD1/TD1Refactoring.png "PlantUML TD1 Refactoring")
 
 ## TD2

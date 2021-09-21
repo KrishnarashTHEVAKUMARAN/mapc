@@ -2,14 +2,6 @@
 package TD1 {
   package refactoring {
     package api {
-        package bigburger {
-
-        }
-
-        package macdeau {
-
-        }
-
         package burger {
             interface DieteticElement{
                 calories_per_100g(): double
@@ -22,6 +14,29 @@ package TD1 {
 
             interface Food extends DieteticElement, Product{
                 calories(): double <<default>>
+            }
+
+            interface BurgerCook{
+                with_cheese(): BurgerCook
+                with_onions(): BurgerCook
+                with_sauce(in sauce: BurgerSauce): BurgerCook
+                with_tomato(): BurgerCook
+                cook(): BurgerCook
+            }
+
+            interface BurgerRestaurant{
+                order_menu(in menu: MenuType): BurgerCook
+                order_personal(in size: MenuSize, in type: BurgerMeat): BurgerCook
+            }
+
+            class BurgerFactory{
+                -instance: BurgerFactory {static}
+                -registry: Map<Price, List<BurgerRestaurant>> {static}
+
+                -this()
+                +instance(): BurgerFactory {static}
+                +register(in price: Price, in restaurant: BurgerRestaurant): void {static}
+                +select(in price: Price): BurgerRestaurant
             }
 
             class Burger{
@@ -107,13 +122,71 @@ package TD1 {
                 MEAT_MENU, FISH_MENU, CHEESE_MENU
             }
 
+            enum MenuType{
+                CHEAP, EXPENSIVE
+            }
+
             enum MenuSize{
                 SMALL, MEDIUM, BIG
             }
 
         }
 
+        package macdeau {
+            class McDeauCook implements BurgerCook{
+                name: String
+
+                this(in name: String, in size: MenuSize, in type: BurgerMeat)
+                with_cheese(): McDeauCook
+                with_onions(): McDeauCook
+                with_sauce(in sauce: BurgerSauce): McDeauCook
+                with_tomato(): McDeauCook
+                cook(): McDeauCook
+            }
+
+            class MacDeauBurger extends Burger{
+                this(in name: String, in items: List<Food>)
+            }
+
+            class MacDeauRestaurant implements BurgerRestaurant{
+                -instance: MacDeauRestaurant {static}
+
+                -this()
+                +queue(): BurgerRestaurant {static}
+                order_menu(in menu: MenuType): BurgerCook
+                order_personal(in size: MenuSize, in type: BurgerMeat): BurgerCook
+            }
+        }
+
+        package bigburger {
+            class BigBurgerCook implements BurgerCook{
+                name: String
+
+                this(in name: String, in size: MenuSize, in type: BurgerMeat)
+                with_cheese(): McDeauCook
+                with_onions(): McDeauCook
+                with_sauce(in sauce: BurgerSauce): McDeauCook
+                with_tomato(): McDeauCook
+                cook(): McDeauCook
+            }
+
+            class BigBurgerBurger extends Burger{
+                this(in name: String, in items: List<Food>)
+            }
+
+            class BigBurgerRestaurant implements BurgerRestaurant{
+                -instance: MacDeauRestaurant {static}
+
+                -this()
+                +queue(): BurgerRestaurant {static}
+                order_menu(in menu: MenuType): BurgerCook
+                order_personal(in size: MenuSize, in type: BurgerMeat): BurgerCook
+            }
+        }
+
         Food "*" <--*  Burger : -items
+        Food "*" <--*  McDeauCook : -products
+        Food "*" <--*  BigBurgerCook : -products
 
     }
 
