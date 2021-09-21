@@ -3,6 +3,12 @@
  */
 package td1;
 
+import td1.refactoring.api.bigburger.BigBurgerRestaurant;
+import td1.refactoring.api.burger.Burger;
+import td1.refactoring.api.burger.BurgerFactory;
+import td1.refactoring.api.burger.MenuSize;
+import td1.refactoring.api.burger.MenuType;
+import td1.refactoring.api.macdeau.MacDeauRestaurant;
 import td1.step5.api.burger.BurgerBuilder;
 import td1.step5.api.burger.BurgerMeat;
 import td1.step5.api.burger.BurgerSauce;
@@ -11,12 +17,17 @@ import td1.step5.api.restauration.Food;
 import java.util.Arrays;
 import java.util.List;
 
+import static td1.refactoring.api.burger.BurgerMeat.BEEF;
+import static td1.refactoring.api.burger.BurgerSauce.*;
+import static td1.refactoring.api.burger.Price.CHEAP;
+import static td1.refactoring.api.burger.Price.EXPENSIVE;
 import static td1.step5.api.burger.MenuSize.BIG;
 import static td1.step5.api.burger.MenuType.FISH_MENU;
 import static td1.step5.api.burger.MenuType.MEAT_MENU;
 
 public class App {
     public static void main(String args[]) {
+        System.out.println("TD1 Step 5");
         Food alice_dinner = BurgerBuilder.order_menu("Fishy", FISH_MENU).cook();
         Food bob_dinner = BurgerBuilder.order_menu("Beefy", MEAT_MENU).with_onions().with_cheese().cook();
         Food charles_dinner = BurgerBuilder.order_personal("Own Style", BurgerMeat.BEEF, BIG).with_onions()
@@ -26,5 +37,42 @@ public class App {
         for (Food dinner : dinners) {
             System.out.println(dinner);
         }
+
+        System.out.println("TD1 After Refactoring");
+        BurgerFactory.register(CHEAP, MacDeauRestaurant.queue());
+        BurgerFactory.register(EXPENSIVE, BigBurgerRestaurant.queue());
+        BurgerFactory advisor = BurgerFactory.instance();
+
+        Burger alice_dinner1 = advisor
+                .select(CHEAP)
+                .order_menu(MenuType.FISH_MENU)
+                .cook();
+
+        Burger bob_dinner1 = advisor
+                .select(CHEAP)
+                .order_menu(MenuType.MEAT_MENU)
+                .with_onions()
+                .with_cheese()
+                .cook();
+
+        Burger charles_dinner1 = advisor
+                .select(EXPENSIVE)
+                .order_personal(MenuSize.BIG, BEEF)
+                .with_onions()
+                .with_cheese()
+                .with_sauce(BARBECUE)
+                .with_sauce(BEARNAISE)
+                .with_sauce(BURGER)
+                .with_cheese()
+                .cook();
+        List<Burger> dinners1 = Arrays.asList(
+                alice_dinner1,
+                bob_dinner1,
+                charles_dinner1
+        );
+        for (Burger dinner : dinners1) {
+            System.out.println(dinner);
+        }
+
     }
 }

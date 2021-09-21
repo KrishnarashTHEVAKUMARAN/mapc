@@ -29,6 +29,6 @@ public class BurgerFactory {
     }
 
     public BurgerRestaurant select(Price price) {
-        return registry.get(price).get(1);
+        return registry.get(price).get(0);
     }
 }
