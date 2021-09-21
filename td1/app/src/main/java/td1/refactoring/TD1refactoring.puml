@@ -1,0 +1,132 @@
+@startuml TD1Refactoring
+package TD1 {
+  package refactoring {
+    package api {
+        package bigburger {
+
+        }
+
+        package macdeau {
+
+        }
+
+        package burger {
+            interface DieteticElement{
+                calories_per_100g(): double
+            }
+
+            interface Product{
+                price(): double
+                weight(): double
+            }
+
+            interface Food extends DieteticElement, Product{
+                calories(): double <<default>>
+            }
+
+            class Burger{
+                -name: String
+
+                +this(in name: String, in items: List<Food>)
+                +calories(): double
+                +weight(): double
+                +price(): double
+                +calories_per_100g(): double
+                +toString(): String
+            }
+
+            class Cheddar implements Food {
+                -BASE_PRICE : double {static}
+                -weight: double
+
+                +this(in weight: double)
+                +calories_per_100g(): double
+                +weight(): double
+                +price(): double
+                +toString(): String
+            }
+
+            class DeepFriedOnions implements Food {
+                -BASE_PRICE : double {static}
+                -weight: double
+
+                +this(in weight: double)
+                +calories_per_100g(): double
+                +weight(): double
+                +price(): double
+                +toString(): String
+            }
+
+            class Meat implements Food {
+                -type : BurgerMeat
+                -weight: double
+
+                +this(in type: BurgerMeat, in weight: double)
+                +weight(): double
+                +price(): double
+                +calories_per_100g(): double
+                +toString(): String
+            }
+
+            class Sauce implements Food {
+                -type : BurgerSauce
+                -weight: double
+
+                +this(in type: BurgerSauce, in weight: double)
+                +price(): double
+                +weight(): double
+                +calories_per_100g(): double
+                +toString(): String
+            }
+
+            class Tomato implements Food {
+                -BASE_PRICE : double {static}
+                -weight: double
+
+                +this(in weight: double)
+                +calories_per_100g(): double
+                +weight(): double
+                +price(): double
+                +toString(): String
+            }
+
+            enum BurgerMeat implements DieteticElement{
+                BEEF, WHITEFISH
+
+                +calories_per_100g(): double
+                +price(): double
+            }
+
+            enum BurgerSauce implements DieteticElement{
+                BURGER, BARBECUE, BEARNAISE
+
+                +calories_per_100g(): double
+            }
+
+            enum MenuType{
+                MEAT_MENU, FISH_MENU, CHEESE_MENU
+            }
+
+            enum MenuSize{
+                SMALL, MEDIUM, BIG
+            }
+
+        }
+
+        Food "*" <--*  Burger : -items
+
+    }
+
+    package client {
+        class App
+    }
+
+  }
+
+  client ..> api
+
+}
+
+
+
+@enduml
