@@ -20,7 +20,13 @@ package td2 {
             }
 
             interface FSFactory {
-                + createComposant()
+                - {static} instance : FSFactory
+                + createComposant(in type: ComposantType, in name: String, in owner: Owner)
+                + {static} getInstance() : FSFactory
+            }
+
+            enum ComposantType {
+                REPERTOIRE, FICHIER
             }
 
             class ComposantImpl implements Composant{
@@ -75,6 +81,7 @@ package td2 {
 
    Composite *-> Composant
    ComposantImpl --> "1" Owner  : -owner
+   FSFactory --> ComposantType
    Repertoire *--> "*" Composant : - elems
    FSFactory o-- Composant
    Fichier *-->  Composite
