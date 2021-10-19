@@ -23,26 +23,42 @@ package td2 {
                 + createComposant()
             }
 
-            interface ComposantImpl{
+            class ComposantImpl implements Composant{
                 - name : String
 
                 ~ this(in name: String, in owner: Owner)
-                + getOwner(): Owner
                 + getName(): String
+                + getContent(): String
+                + getOwner(): Owner
+                + getSize(): int
+                + appendContent(in content: String): void
+                + setOwner(in owner: Owner)
             }
 
-            class Fichier implements ComposantImpl{
+            class Fichier extends ComposantImpl{
                 - name : String
                 ~ this(in name: String, in owner: Owner)
-                + getOwner: Owner
-                + getName: String
+                + getName(): String
+                + getContent(): String
+                + getOwner(): Owner
+                + getSize(): int
+                + appendContent(in content: String): void
+                + setOwner(in owner: Owner)
             }
 
-            class Repertoire implements ComposantImpl{
+            class Repertoire extends ComposantImpl{
                 - name : String
-                 + this(in name: String, in owner: Owner)
-                + getOwner: Owner
-                + getName: String
+                + this(in name: String, in owner: Owner)
+                + getName(): String
+                + getContent(): String
+                + getOwner(): Owner
+                + getSize(): int
+                + appendContent(in content: String): void
+                + setOwner(in owner: Owner)
+                + addChild()
+                + removeChild()
+                + getChildren()
+                + removeChildren()
             }
 
             class Owner {
