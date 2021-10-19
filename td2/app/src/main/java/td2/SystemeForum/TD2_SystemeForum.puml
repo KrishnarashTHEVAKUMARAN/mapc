@@ -1,0 +1,59 @@
+@startuml TD2_SystemeForum
+
+title __Diagramme de classe de TD2 2.3__
+
+package td2 {
+    package SystemeForum{
+         interface Composant {
+
+         }
+
+         interface Composite {
+             ~ add(in contenu: C): void
+             ~ remove(in i: int): void
+             ~ size(): int
+         }
+
+         class ComposantImpl implements Composant{
+             ~ contenu : List<C>
+             ~ sujet : String
+
+             + this(in sujet: String)
+             + add(in content: C): void
+             + toString(): String
+         }
+
+         class Message implements Composant{
+             - nom : String
+             - description : String
+
+             + this(in nom: String, in description: String)
+             + toString(): String
+         }
+
+         class Salon extends ComposantImpl{
+             + this(in sujet: String)
+             + remove(in i: int) : void
+             + size(): int
+             + toString(): String
+         }
+
+         class Forum extends ComposantImpl{
+             + this(in sujet: String)
+             + remove(in i: int) : void
+             + size(): int
+             + toString(): String
+         }
+
+         class Theme extends ComposantImpl{
+             + this(in sujet: String)
+             + remove(in i: int) : void
+             + size(): int
+             + toString(): String
+         }
+    }
+}
+
+Composite *-> Composant
+
+@enduml
