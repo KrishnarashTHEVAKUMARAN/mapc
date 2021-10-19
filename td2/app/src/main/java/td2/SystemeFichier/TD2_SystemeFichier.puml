@@ -1,0 +1,68 @@
+@startuml TD2_SystemeFichier
+
+title __Diagramme de classe de TD2 2.1__
+package td2 {
+    package SystemeFichier{
+            interface Composant {
+                + getName(): String
+                + getContent(): String
+                + getOwner(): Owner
+                + getSize(): int
+                + appendContent(in content: String): void
+                + setOwner(in owner: Owner)
+            }
+
+            interface Composite {
+                + addChild()
+                + removeChild()
+                + getChildren()
+                + removeChildren()
+            }
+
+            interface FSFactory {
+                + createComposant()
+            }
+
+            interface ComposantImpl{
+                - name : String
+
+                ~ this(in name: String, in owner: Owner)
+                + getOwner(): Owner
+                + getName(): String
+            }
+
+            class Fichier implements ComposantImpl{
+                - name : String
+                ~ this(in name: String, in owner: Owner)
+                + getOwner: Owner
+                + getName: String
+            }
+
+            class Repertoire implements ComposantImpl{
+                - name : String
+                 + this(in name: String, in owner: Owner)
+                + getOwner: Owner
+                + getName: String
+            }
+
+            class Owner {
+                - name : String
+
+                + this(in n: String)
+                + equals()
+                + hashCode()
+                + toString()
+            }
+
+    }
+}
+
+   Composite *-> Composant
+   ComposantImpl --> "1" Owner  : -owner
+   Repertoire *--> "*" Composant : - elems
+   FSFactory o-- Composant
+   Fichier *-->  Composite
+   Owner  --> "~possède *" Fichier
+   Owner  --> "~possède *" Repertoire
+
+@enduml
